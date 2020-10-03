@@ -1,5 +1,5 @@
 module Enums
-export Role, Type, Gender, Fusion, Race, Attribute, Categ, Usage, Series
+export Role, Type, Gender, Fusion, Race, Alignment, Attribute, Categ, Usage, Series
 #----------------------------------
 # card info constants
 #----------------------------------
@@ -101,29 +101,32 @@ end
   Ranger
 end
 
-# attribute of demon or spell
-@enum Attribute begin
+# demon alignment (attribute)
+@enum Alignment begin
   Neutral = 0x1
   Law = 0x2
   Chaos = 0x4
   Light = 0x8
   Dark = 0x10
-  Phys = 0x20
-  Magic = 0x40
-  Fire = 0x80
-  Ice = 0x100
-  Electric = 0x200
-  Force = 0x400
-  Psy = 0x800
-  Expel = 0x1000
-  Death = 0x2000
-  Almighty = 0x4000
-  Curse = 0x8000
-  Sealing = 0x10000
-  Restoration = 0x20000
-  Reflect = 0x40000
-  Paralyze = 0x80000
-  Alignments = 0x1f
+end
+
+# attribute of spell/effect (not demon)
+@enum Attribute begin
+  Phys = 0x1
+  Magic = 0x2
+  Fire = 0x4
+  Ice = 0x8
+  Electric = 0x10
+  Force = 0x20
+  Psy = 0x40
+  Expel = 0x80
+  Death = 0x100
+  Almighty = 0x200
+  Curse = 0x400
+  Sealing = 0x800
+  Restoration = 0x1000
+  Reflect = 0x2000
+  Paralyze = 0x4000
 end
 
 @enum Categ begin

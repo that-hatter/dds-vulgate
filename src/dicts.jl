@@ -89,12 +89,15 @@ races = Dict(
   "Ranger" => Enums.Ranger
 )
 
-attributes = Dict(
+alignments = Dict(
   "Neutral" => Enums.Neutral,
   "Law" => Enums.Law,
   "Chaos" => Enums.Chaos,
   "Light" => Enums.Light,
-  "Dark" => Enums.Dark,
+  "Dark" => Enums.Dark
+)
+
+attributes = Dict(
   "Phys" => Enums.Phys,
   "Magic" => Enums.Spell,
   "Fire" => Enums.Fire,

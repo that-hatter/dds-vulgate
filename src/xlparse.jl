@@ -40,6 +40,7 @@ struct DBEntry
   usage::Int
   atk::Int
   hp::Int
+  alignment::Int
   attribute::Int
   weakness::Int
   resistance::Int
@@ -187,15 +188,20 @@ function gethp(r::XLRaw)::Int
   end
 end
 
-function getattribute(r::XLRaw, role::Int)::Int
+function getalignment(r::XLRaw)::Int
   try
     ws = occursin("\n", r.att) ? "\n" : " "
-    if role === Int(Enums.Demon)
-      atts = split(split(r.att, ws)[2], "/")
-      return Int(Dicts.attributes[strip(atts[1])]) | Int(Dicts.attributes[strip(atts[2])])
-    elseif role === Int(Enums.Spell)
-      return Dicts.attributes[r.att] |> Int
-    end
+    alns = split(split(r.att, ws)[2], "/") .|> strip
+    return Int(Dicts.alignments[alns[1]]) | Int(Dicts.alignments[alns[2]])
+  catch
+    @warn ("Unable to fetch alignment: " * r.id)
+    return 0
+  end
+end
+
+function getattribute(r::XLRaw)::Int
+  try
+    return Dicts.attributes[strip(r.att)] |> Int
   catch
     @warn ("Unable to fetch attribute: " * r.id)
     return 0
@@ -256,7 +262,7 @@ function parsemagset(s::String)::Tuple{Int, Int, Int, Int, Int}
       if length(parts) < i
         break
       end
-      att = Dicts.attributes[strip(parts[i - 1])] |> Int |> Enums.Attribute
+      att = Dicts.alignments[strip(parts[i - 1])] |> Int |> Enums.Alignment
       mags[att] = parse(Int, parts[i])
     end
   end
@@ -315,78 +321,75 @@ end
 function generatedemon(r::XLRaw)::DBEntry
   e1, e2, a1, a2 = geteffects(r, Int(Enums.Demon))
   return DBEntry(
-    getid(r),
-    Int(Enums.Demon),
-    gettype(r),
-    getlevel(r),
-    getrace(r),
-    getfusion(r),
-    0,
-    0,
-    0,
-    getatk(r),
-    gethp(r),
-    getattribute(r, Int(Enums.Demon)),
-    getweakness(r),
-    getresistance(r),
-    getcosts(r)...,
-    getemits(r)...,
+    getid(r),           # id
+    Int(Enums.Demon),   # role
+    gettype(r),         # type
+    getlevel(r),        # level
+    getrace(r),         # race
+    getfusion(r),       # fusion
+    0,                  # gender
+    0,                  # categ
+    0,                  # usage
+    getatk(r),          # atk
+    gethp(r),           # hp
+    getalignment(r),    # alignment
+    0,                  # attribute
+    getweakness(r),     # weakness
+    getresistance(r),   # resistance
+    getcosts(r)...,     # costs
+    getemits(r)...,     # emits
     r.name,
     r.flavor,
-    a1,
-    a2,
-    e1,
-    e2
+    a1, a2, e1, e2
   )
 end
 
 function generatepartner(r::XLRaw)::DBEntry
   e1, e2, a1, a2 = geteffects(r, Int(Enums.Partner))
   return DBEntry(
-    getid(r),
-    Int(Enums.Partner),
-    gettype(r),
-    0,
-    0,
-    0,
-    getgender(r),
-    0,
-    0,
-    getatk(r),
-    gethp(r),
-    0,
-    0,
-    0,
-    0, 0, 0, 0, 0,
-    getemits(r)...,
+    getid(r),           # id
+    Int(Enums.Partner), # role
+    gettype(r),         # type
+    0,                  # level
+    0,                  # race
+    0,                  # fusion
+    getgender(r),       # gender
+    0,                  # categ
+    0,                  # usage
+    getatk(r),          # atk
+    gethp(r),           # hp
+    0,                  # alignment
+    0,                  # attribute
+    0,                  # weakness
+    0,                  # resistance
+    0, 0, 0, 0, 0,      # costs
+    getemits(r)...,     # emits
     r.name,
     r.flavor,
-    a1,
-    a2,
-    e1,
-    e2
+    a1, a2, e1, e2
   )
 end
 
 function generatemagic(r::XLRaw)::DBEntry
   e1, e2, a1, a2 = geteffects(r, Int(Enums.Spell))
   return DBEntry(
-    getid(r),
-    Int(Enums.Spell),
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    getattribute(r, Int(Enums.Spell)),
-    0,
-    0,
-    getcosts(r)...,
-    0, 0, 0, 0, 0,
+    getid(r),           # id
+    Int(Enums.Spell),   # role
+    0,                  # type
+    0,                  # level
+    0,                  # race
+    0,                  # fusion
+    0,                  # gender
+    0,                  # categ
+    0,                  # usage
+    0,                  # atk
+    0,                  # hp
+    0,                  # alignment
+    getattribute(r),    # attribute
+    0,                  # weakness
+    0,                  # resistance
+    getcosts(r)...,     # costs
+    0, 0, 0, 0, 0,      # emits
     r.name,
     r.flavor,
     a1,
@@ -399,28 +402,26 @@ end
 function generateitem(r::XLRaw)::DBEntry
   e1, e2, a1, a2 = geteffects(r, Int(Enums.Item))
   return DBEntry(
-    getid(r),
-    Int(Enums.Item),
-    0,
-    0,
-    0,
-    0,
-    0,
-    getcateg(r),
-    getusage(r),
-    0,
-    0,
-    0,
-    0,
-    0,
-    getcosts(r)...,
-    0, 0, 0, 0, 0,
+    getid(r),         # id
+    Int(Enums.Item),  # role
+    0,                # type 
+    0,                # level
+    0,                # race
+    0,                # fusion
+    0,                # gender
+    getcateg(r),      # categ
+    getusage(r),      # usage
+    0,                # atk
+    0,                # hp
+    0,                # alignment
+    0,                # attribute
+    0,                # weakness
+    0,                # resistance
+    getcosts(r)...,   # costs
+    0, 0, 0, 0, 0,    # emits
     r.name,
     r.flavor,
-    a1,
-    a2,
-    e1,
-    e2
+    a1, a2, e1, e2
   )
 end
 
@@ -442,7 +443,7 @@ end
 function generateallentries()::Array{DBEntry}
   out::Array{DBEntry} = []
   for r in XLSX.eachtablerow(ss)
-    # if r.row > 15
+    # if r.row > 1 
     #   continue
     # end
 
