@@ -338,8 +338,8 @@ function generatedemon(r::XLRaw)::DBEntry
     getresistance(r),   # resistance
     getcosts(r)...,     # costs
     getemits(r)...,     # emits
-    r.name,
-    r.flavor,
+    spaceify(r.name),
+    spaceify(r.flavor),
     a1, a2, e1, e2
   )
 end
@@ -364,8 +364,8 @@ function generatepartner(r::XLRaw)::DBEntry
     0,                  # resistance
     0, 0, 0, 0, 0,      # costs
     getemits(r)...,     # emits
-    r.name,
-    r.flavor,
+    spaceify(r.name),
+    spaceify(r.flavor),
     a1, a2, e1, e2
   )
 end
@@ -390,12 +390,9 @@ function generatemagic(r::XLRaw)::DBEntry
     0,                  # resistance
     getcosts(r)...,     # costs
     0, 0, 0, 0, 0,      # emits
-    r.name,
-    r.flavor,
-    a1,
-    a2,
-    e1,
-    e2
+    spaceify(r.name),
+    spaceify(r.flavor),
+    a1, a2, e1, e2
   )
 end
 
@@ -419,8 +416,8 @@ function generateitem(r::XLRaw)::DBEntry
     0,                # resistance
     getcosts(r)...,   # costs
     0, 0, 0, 0, 0,    # emits
-    r.name,
-    r.flavor,
+    spaceify(r.name),
+    spaceify(r.flavor),
     a1, a2, e1, e2
   )
 end

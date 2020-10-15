@@ -90,11 +90,11 @@ races = Dict(
 )
 
 alignments = Dict(
+  "Light" => Enums.Light,
+  "Dark" => Enums.Dark,
   "Neutral" => Enums.Neutral,
   "Law" => Enums.Law,
-  "Chaos" => Enums.Chaos,
-  "Light" => Enums.Light,
-  "Dark" => Enums.Dark
+  "Chaos" => Enums.Chaos
 )
 
 attributes = Dict(

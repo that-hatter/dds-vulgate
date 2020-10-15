@@ -103,11 +103,11 @@ end
 
 # demon alignment (attribute)
 @enum Alignment begin
-  Neutral = 0x1
-  Law = 0x2
-  Chaos = 0x4
-  Light = 0x8
-  Dark = 0x10
+  Light = 0x1
+  Dark = 0x2
+  Neutral = 0x4
+  Law = 0x8
+  Chaos = 0x10
 end
 
 # attribute of spell/effect (not demon)
